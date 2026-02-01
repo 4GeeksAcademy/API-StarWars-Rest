@@ -1,16 +1,22 @@
-import os
+# src/admin.py
 from flask_admin import Admin
-from models import db, User
 from flask_admin.contrib.sqla import ModelView
+from models import db, User, People, Planet, Favorite
 
 def setup_admin(app):
-    app.secret_key = os.environ.get('FLASK_APP_KEY', 'sample key')
-    app.config['FLASK_ADMIN_SWATCH'] = 'cerulean'
-    admin = Admin(app, name='4Geeks Admin', template_mode='bootstrap3')
+    """
+    Configura Flask-Admin y registra las vistas de modelo.
+    """
+    admin = Admin(app, name="Admin", template_mode="bootstrap4")
 
-    
-    # Add your models here, for example this is how we add a the User model to the admin
-    admin.add_view(ModelView(User, db.session))
+    class ReadWriteModelView(ModelView):
+        column_exclude_list = ("password",)
+        form_excluded_columns = ("favorites",)
+        can_view_details = True
+        create_modal = True
+        edit_modal = True
 
-    # You can duplicate that line to add mew models
-    # admin.add_view(ModelView(YourModelName, db.session))
+    admin.add_view(ReadWriteModelView(User, db.session, category="Models"))
+    admin.add_view(ReadWriteModelView(People, db.session, category="Models"))
+    admin.add_view(ReadWriteModelView(Planet, db.session, category="Models"))
+    admin.add_view(ReadWriteModelView(Favorite, db.session, category="Models"))
