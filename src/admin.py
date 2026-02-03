@@ -4,9 +4,6 @@ from flask_admin.contrib.sqla import ModelView
 from models import db, User, People, Planet, Favorite
 
 def setup_admin(app):
-    """
-    Configura Flask-Admin y registra las vistas de modelo.
-    """
     admin = Admin(app, name="Admin", template_mode="bootstrap4")
 
     class ReadWriteModelView(ModelView):
